@@ -54,3 +54,11 @@ To allow the communication between the `worker node` and `master node` each node
 ## Deployments
 
 ## Services
+
+## Pods
+
+## Storage
+
+## ConfigMaps
+
+## Secretes
