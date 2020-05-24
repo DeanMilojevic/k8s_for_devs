@@ -1,6 +1,6 @@
 
 <p align=center>
-  <img alt="k8s" src="https://github.com/kubernetes/kubernetes/raw/master/logo/logo.png" style="width:150px;height:150px" />
+  <img alt="k8s" src="./resources/k8s.svg" />
 </p>
 
 # K8s for Developers
