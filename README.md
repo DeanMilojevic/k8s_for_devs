@@ -105,7 +105,6 @@ In case of the problems enabling this (process is quite similar for Windows), I 
 
 ## kubectl commands
 
-<p align=center>
 | Command  | Description  |
 |---|---|
 |``` kubectl version ```| K8s version  |
@@ -114,6 +113,5 @@ In case of the problems enabling this (process is quite similar for Windows), I 
 |``` kubectl apply [resource] ```| Create or modify a resource |
 |``` kubectl get all ```| Gets (well, everything) `pods`, `deployments`, `services`, etc.  |
 |``` kubectl port-forward [pod] [ports] ```| Allows the external access to the forwarded port |
-</p>
 
 ## Tools
