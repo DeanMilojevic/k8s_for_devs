@@ -110,6 +110,16 @@ Defining `replicas` when deploying the `pod` will indicate on how many instances
   <img alt="failing pod" src="./resources/failing_pod.svg" />
 </p>
 
+The networking for pods works as following:
+
+1. Each pod has a unique IP address that gets assigned to it. This is called `Cluster IP` address.
+2. The `containers` within the `pod` *share* the same IP address (of the pod), but they **have** the different ports. No 2 `containers` can have the same `port` and be in the same `pod`. Also, `containers` can span multiple `pods`. In case you need to have 2 or more `containers` in the `pod` (on internet found it referred to as *sidecar*, but never experienced a need for this), then you must ensure the `ports` are different for **each** container. The communication in the container is done over the same loopback network interface (localhost), so that makes it simple.
+
+<p align=center>
+  <img alt="pod ip" src="./resources/pod_ip.svg" />
+</p>
+
+
 ## Storage
 
 ## ConfigMaps
