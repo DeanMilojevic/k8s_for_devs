@@ -89,11 +89,26 @@ There are some other, but haven't tried them yet so not gonna touch them at this
 
 In case of the problems enabling this (process is quite similar for Windows), I suggest StackOverflow :)
 
+To view something using a GUI, there is a Web UI that can be configured for k8s. For more information:
+[https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/)
+
+Personally, if I need this I prefer tools like Lens as they do offer the same functionality without a hustle of needing to install the Web UI on the cluster and running the proxy and playing with all that.
+
+![Lens for k8s](./resources/lens.png)
+
 ## Deployments
 
 ## Services
 
 ## Pods
+
+`Pods` are the smallest deployable units of computing that can be created and managed in Kubernetes. In short, they are the fundamental layer of the k8s that we can manage/deploy. They are used to run one or more containers, that is they act as environment for the container to run in. Even if it is possible to have multiple `containers` per `pod`, this is not something that is encouraged. The recommended mantra for this "one process per container and one container per pod", or at least trying to make a "mantra" :)
+
+Defining `replicas` when deploying the `pod` will indicate on how many instances/copies of the pod/container (this can be used interchangeably if we follow the mantra) we will be running within the `node`. This is the `horizontal scaling` that will be taken care automatically for you by k8s. K8s will then load balance the incoming traffic across available pods and allow high availability of the application. In case that one of the pods is "unhealthy", k8s will automatically remove it and replace it with a new instance. This means that `pods` never recover from failure, they are replaced with a new instance.
+
+<p align=center>
+  <img alt="failing pod" src="./resources/failing_pod.svg" />
+</p>
 
 ## Storage
 
@@ -115,3 +130,5 @@ In case of the problems enabling this (process is quite similar for Windows), I 
 |``` kubectl port-forward [pod] [ports] ```| Allows the external access to the forwarded port |
 
 ## Tools
+
+[Lens](https://k8slens.dev/)
