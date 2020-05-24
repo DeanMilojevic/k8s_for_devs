@@ -17,7 +17,20 @@ Some of the key features of k8s are:
 6. Secretes management
 7. Configuration management
 
-This is just some of the benefits system like k8s offers. From developer point of view, this are some of the most crucial ones, imo.
+This is just some of the benefits system like k8s offers. From developer point of view, this are some of the most crucial ones, imo. From development point of view, there is some additional benefits that come with using `containers` and `k8s`. Yes, we could use the `docker` and `docker-compose` for most of the things that we are gonna mention. On the other hand, combining power of `docker` and benefits mentioned above from k8s, we are getting a really powerful tool in the arsenal.
+
+Lets reflect on the benefits that we have using tools like `docker` and `containers` during development:
+
+<p align=center>
+  <img alt="benefits of containers" src="./resources/benefits_of_containers.svg" />
+</p>
+
+With this out of the way, lets see some really useful benefits of the k8s for developers:
+
+<p align=center>
+  <img alt="benefits of k8s" src="./resources/benefits_of_k8s.svg" />
+</p>
+
 
 ## Desired state and k8s
 
@@ -62,3 +75,5 @@ To allow the communication between the `worker node` and `master node` each node
 ## ConfigMaps
 
 ## Secretes
+
+## Tools
