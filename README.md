@@ -31,6 +31,16 @@ With this out of the way, lets see some really useful benefits of the k8s for de
   <img alt="benefits of k8s" src="./resources/benefits_of_k8s.svg" />
 </p>
 
+Some of the reasons you would like to run k8s during development lifecycle:
+
+1. Emulating environment setup (probably just partially) locally
+2. E2E testing
+3. Load testing
+4. Troubleshooting
+
+One of the personal examples on when it is useful to run the k8s locally was implementing a `CronJob` for a feature I was working on. When run with `docker-compose` the container was behaving without any issues, but when finally deployed to the test environment (that runs on k8s) it would almost it would end up in a `CrashLoopBackOff` on the start. After some time trying to figure out (logging was also not showing any useful information about failure), I started the k8s locally and deployed my `CronJob`. After just minutes into looking into the problem, it was obvious what was the problem. The `secrete` injector was having a problem with one of the secretes being used for the `CronJob`.
+
+Another example is when you start playing around with optimizing your cluster and defining resources (CPU/RAM) for your `pods`. It can be useful to run the setup locally and put under a load test to see what are some baseline numbers you can configure for proper scaling (and how many replicas is a good start for your scenario).
 
 ## Desired state and k8s
 
@@ -64,6 +74,21 @@ To allow the communication between the `worker node` and `master node` each node
   <img alt="node" src="./resources/node.svg" />
 </p>
 
+## Running k8s locally
+
+There are different ways of running the k8s locally and to my knowledge most popular are:
+
+1. [Docker Desktop](https://www.docker.com/products/docker-desktop)
+2. [Minikube](https://github.com/kubernetes/minikube)
+
+There are some other, but haven't tried them yet so not gonna touch them at this point. Currently, I am using `docker desktop` for all my development needs, including k8s. It is quite easy to enable the k8s locally:
+
+<p align=center>
+  <img alt="docker desktop" src="./resources/k8s_locally.png" />
+</p>
+
+In case of the problems enabling this (process is quite similar for Windows), I suggest StackOverflow :)
+
 ## Deployments
 
 ## Services
@@ -75,5 +100,7 @@ To allow the communication between the `worker node` and `master node` each node
 ## ConfigMaps
 
 ## Secretes
+
+## CronJobs
 
 ## Tools
