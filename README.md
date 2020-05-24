@@ -103,4 +103,17 @@ In case of the problems enabling this (process is quite similar for Windows), I 
 
 ## CronJobs
 
+## kubectl commands
+
+| Command  | Description  |
+|---|---|
+|``` kubectl version ```| K8s version  |
+|``` kubectl cluster-info ```| Cluster information  |
+|``` kubectl create [resource] ```| Create a resource |
+|``` kubectl apply [resource] ```| Create or modify a resource |
+|``` kubectl get all ```| Gets (well, everything) `pods`, `deployments`, `services`, etc.  |
+|``` kubectl port-forward [pod] [ports] ```| Allows the external access to the forwarded port |
+|``` kubectl expose (-f FILENAME | TYPE NAME) [--port=port] [--protocol=TCP|UDP|SCTP] [--target-port=number-or-name] [--name=name] [--external-ip=external-ip-of-service] [--type=type] [options] ``` | Exposes a port for `deployment`/`pod` |
+
+
 ## Tools
