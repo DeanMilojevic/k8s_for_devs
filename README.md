@@ -606,8 +606,28 @@ resources:
     cpu: "500m"
 ```
 
-For more information about `units` used here: 
-https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes
+For more information about `units` used here:
+[https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes)
+
+### Deployment options
+
+What k8s offer out of the box are several ways of doing deployments:
+
+1. Rolling updates (default)
+2. Rollback
+3. Blue-green (or A/B) deployment
+4. Canary deployment
+
+For more information on this subject:
+[https://kubernetes.io/docs/concepts/workloads/controllers/deployment/](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+The default one, `rolling updates`, is extremely powerful feature. Mostly as it allows the **zero-downtime** when rolling out a new version of the software. To achieve this, the k8s will do the following:
+
+1. New version of the app is created in its own `pod`
+2. The old `pods` are still there, the new one is just added next to them
+3. Then it starts shutting the old `pods` one by one and replacing them with newer versions
+
+Quite simple and elegant solution that just works. I still remember pains when you needed to achieve the same results on other projects. With k8s it is the *default* way of doing deployments.
 
 ### Deleting the deployment
 
@@ -640,20 +660,6 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   16h
 ## Secretes
 
 ## CronJobs
-
-## kubectl commands
-
-| Command  | Description  |
-|---|---|
-|``` kubectl version ```| K8s version  |
-|``` kubectl cluster-info ```| Cluster information  |
-|``` kubectl create [resource] ```| Create a resource |
-|``` kubectl apply [resource] ```| Create or modify a resource |
-|``` kubectl get all ```| Gets (well, everything) `pods`, `deployments`, `services`, etc.  |
-|``` kubectl port-forward [pod-name] [ports] ```| Allows the external access to the forwarded port |
-|``` kubectl delete ([-f FILENAME] | [-k DIRECTORY] | TYPE [(NAME | -l label | --all)]) [options] ``` | Deleting a resource within the cluster |
-|``` kubectl delete pod [pod-name] ```| Delete a pod with given name |
-
 
 ## Tools
 
