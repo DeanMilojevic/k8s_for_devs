@@ -289,6 +289,69 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   17h
 
 To check if everything works as before, lets run `kubectl port-forward my-nginx 8080:80` and the `http GET localhost:8080`. The output should be exactly the same as in the previous scenario when we used the imperative way. Awesome.
 
+Now, next thing that is really useful to check (when troubleshooting or just to see what was created) is to `describe` the resource. This means that you can get all the information associated with the resource using the following command:
+
+```bash
+kubectl describe pod my-nginx
+#the output is as follows
+Name:         my-nginx
+Namespace:    default
+Priority:     0
+Node:         docker-desktop/192.168.65.3
+Start Time:   Mon, 25 May 2020 09:57:46 +0200
+Labels:       name=my-nginx
+Annotations:  kubectl.kubernetes.io/last-applied-configuration:
+                {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"name":"my-nginx"},"name":"my-nginx","namespace":"default"},"spec":...
+Status:       Running
+IP:           10.1.0.37
+IPs:
+  IP:  10.1.0.37
+Containers:
+  my-nginx:
+    Container ID:   docker://8ca36a7c77cf4b65dd03a487cd2b572c320ccbc62aebc2ba7da4a96023f6b665
+    Image:          nginx:alpine
+    Image ID:       docker-pullable://nginx@sha256:763e7f0188e378fef0c761854552c70bbd817555dc4de029681a2e972e25e30e
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Mon, 25 May 2020 09:57:47 +0200
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     500m
+      memory:  128Mi
+    Requests:
+      cpu:        500m
+      memory:     128Mi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-kxzww (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  default-token-kxzww:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  default-token-kxzww
+    Optional:    false
+QoS Class:       Guaranteed
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                 node.kubernetes.io/unreachable:NoExecute for 300s
+Events:
+  Type    Reason     Age        From                     Message
+  ----    ------     ----       ----                     -------
+  Normal  Scheduled  <unknown>  default-scheduler        Successfully assigned default/my-nginx to docker-desktop
+  Normal  Pulled     20m        kubelet, docker-desktop  Container image "nginx:alpine" already present on machine
+  Normal  Created    20m        kubelet, docker-desktop  Created container my-nginx
+  Normal  Started    20m        kubelet, docker-desktop  Started container my-nginx
+  ```
+
+There is a lot of information here. Also we can see all the information for our pod that we provided (for example, labels, resources, etc.). This is really detailed and good to know when you want to check a particular resource in case of some problems. The `Events` section in this output can usually indicate some high level problems and be a good starting point in troubleshooting the issue.
+
 ### Deletion of pod
 
 Deletion of `pod` has an interesting side-effect that can be confusing first time. WHen you delete the `pod` using the command bellow:
@@ -310,6 +373,8 @@ kubectl get pods
 you will again see your `pod`. If you look carefully and compare before/after situation, you will notice that there is a difference. `Pod` has a new **id**. This is expected behavior of the k8s, as it tries to keep the desired state. The `master node` got notified of deletion of the `pod`, checked the `deployment` (discussed in upcoming chapter) and saw that `pod` should have `number of replicas` running and the started a new instance. So the `pod` was deleted, it is just that new instance of it was started automatically.
 
 To fully remove the you need to remove the `deployment` that is associated with this `pod` (or that manages the `pod`). For this you can check the [Deleting the deployment](###deleting-the-deployment).
+
+In case that pod was created using the *declarative* way (that is, using `YAML`) like in example above, we can actually just delete the `pod` and it will be gone. This is because the only thing we created was `pod`, the command will not create any associated resource (`deployment` that is) that will try to put the desired state back (in case of deletion).
 
 ## Deployments
 
