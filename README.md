@@ -376,6 +376,32 @@ To fully remove the you need to remove the `deployment` that is associated with 
 
 In case that pod was created using the *declarative* way (that is, using `YAML`) like in example above, we can actually just delete the `pod` and it will be gone. This is because the only thing we created was `pod`, the command will not create any associated resource (`deployment` that is) that will try to put the desired state back (in case of deletion).
 
+Also really nice way to cleanup/delete resources created using file is their deletion using the file:
+
+```bash
+kubectl delete -f src/nginx.pod.yaml
+```
+
+### Getting inside of the pod
+
+There is an useful command that allows you to connect to the `pod/container` and do some troubleshooting on the file system for example (check if all files were being deployed and so on). That is using the command:
+
+```bash
+kubectl exec [pod-name] -it sh
+
+# example
+kubectl exec my-nginx -it sh
+```
+
+This will give you access to the file system inside of the `container` so you can check what is happening inside.
+
+```bash
+# example of command above
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ #
+```
+
 ## Deployments
 
 ### ReplicaSet
