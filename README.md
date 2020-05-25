@@ -232,6 +232,63 @@ Forwarding from [::1]:8080 -> 80
 Handling connection for 8080
 ```
 
+### Imperative vs. Declarative
+
+Ok, now that we covered how we can create a pod in *imperative* way, lets move towards what is considered a standard. That is, using *declarative* way of creating resources. This is done using `YAML`. There are tone of the information on this topic online, so not gonna cover it here. For this to work with k8s, there are certain rules (or to be exact a `schema` to be followed). So let us try create the same thing using `YAML` now.
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx
+  labels:
+    name: my-nginx
+spec:
+  containers:
+  - name: my-nginx
+    image: nginx:alpine
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 8080
+
+```
+
+There ar some key-value pairs in here that we can ignore for now (this is just a default template I have configured locally). Now there are 2 commands we can use to create the `pod` using `YAML`:
+
+```bash
+kubectl create -f [file-name.yaml|file-name.yml]
+# or
+kubectl apply -f [file-name.yaml|file-name.yml]
+```
+
+The difference is what will happen in case of that `pod` already exists on the cluster. The `create` command ends up in error while `apply` will do create or update of the `pod`. For most cases, I prefer the `apply` command.
+
+```bash
+kubectl apply -f src/nginx.pod.yaml
+# file src/nginx.pod.yml can be found in the root of this repository
+```
+
+This should give an output like the following:
+
+```bash
+pod/my-nginx created
+```
+
+As you can see, the output is a bit different then originally, but also now when we run the command `kubectl get all` the number of resources created will be different as well:
+
+```bash
+NAME           READY   STATUS    RESTARTS   AGE
+pod/my-nginx   1/1     Running   0          5m7s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   17h
+```
+
+To check if everything works as before, lets run `kubectl port-forward my-nginx 8080:80` and the `http GET localhost:8080`. The output should be exactly the same as in the previous scenario when we used the imperative way. Awesome.
+
 ### Deletion of pod
 
 Deletion of `pod` has an interesting side-effect that can be confusing first time. WHen you delete the `pod` using the command bellow:
