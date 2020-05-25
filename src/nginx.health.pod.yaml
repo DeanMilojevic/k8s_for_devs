@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx-health
+  labels:
+    name: my-nginx-health
+spec:
+  containers:
+  - name: my-nginx-health
+    image: nginx:alpine
+    livenessProbe:
+      httpGet: 
+        path: /index.html
+        port: 80
+      initialDelaySeconds: 10
+      timeoutSeconds: 2
+      periodSeconds: 10
+      failureThreshold: 1
+    readinessProbe:
+      httpGet:
+        path: /index.html
+        port: 80
+      initialDelaySeconds: 10
+      timeoutSeconds: 2
+      periodSeconds: 10
+      failureThreshold: 0
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80

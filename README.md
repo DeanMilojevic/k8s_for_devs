@@ -352,6 +352,65 @@ Events:
 
 There is a lot of information here. Also we can see all the information for our pod that we provided (for example, labels, resources, etc.). This is really detailed and good to know when you want to check a particular resource in case of some problems. The `Events` section in this output can usually indicate some high level problems and be a good starting point in troubleshooting the issue.
 
+### Pod health
+
+Now let us touch on the subject that can help k8s to help you when something goes wrong. That is using the `probs` to determine the state/health of the `pod container`. There are 2 types of the `probes` k8s are using to determine what is happening (or what it should to with a particular `container`):
+
+1. Liveness prob
+2. Readiness prob
+
+There is a subtle difference between the two. Liveness prob says is `pod` alive. Readiness prob checks is the requests can be forwarded to the `pod`. `Probs` are something that will k8s run behind a scene for you, sort of diagnostic, periodically. So it is not something that we need to worry about, except when it starts failing :)
+
+So in case that `container` fails on the check, there is a policy associated with the `probs` on what should happen next. By default this policy is set to **restart** always (`restartPolicy: Always`). This can be changed, depending on the use-case and expectations on what should happen in case of the failure.
+
+There are different types of checks we can perform in combination when defining the `probs`:
+
+1. ExecAction: Run some action inside of the `container` (file check, etc.)
+2. TCPSocketAction: TCP check on the port inside of the `container`
+3. HTTPGetAction: Run the HTTP GET request on the endpoint defined within the `container`
+
+The "result" of the check can be:
+
+1. Success
+2. Failure
+3. Unknown
+
+Now, the following example shows how to define the `liveness and readiness prob` in declarative way (again, this only means using `YAML`):
+
+```yml
+livenessProbe:
+  httpGet:
+    path: /index.html
+    port: 80
+  initialDelaySeconds: 10
+  timeoutSeconds: 2
+  periodSeconds: 10
+  failureThreshold: 1
+readinessProbe:
+  httpGet:
+    path: /index.html
+    port: 80
+  initialDelaySeconds: 10
+  timeoutSeconds: 2
+  periodSeconds: 10
+  failureThreshold: 0
+```
+
+Honestly, depending on the situation it us up to us to define this checks properly. I know that most common answer on 99,999% of questions in developer world ends in that answer "it depends". So a simple rule of thumb for me, as the description of `probs` defines them, is:
+
+1. Liveness probe:  a simple check if the application is running (process check, an endpoint that returns Success/Failure) and nothing more.
+2. Readiness probe: a check of dependencies (if you know that you can't serve the request because your db is down) and can you guarantee a success when processing the request.
+
+The entire example can be found in the `src/nginx.health.pod.yaml`. To test this you can `exec` into the `container` and try renaming the file. When you describe the `pod` you should see something like this:
+
+```bash
+  Normal   Scheduled  <unknown>          default-scheduler        Successfully assigned default/my-nginx-health to docker-desktop
+  Warning  Unhealthy  20s                kubelet, docker-desktop  Liveness probe failed: HTTP probe failed with statuscode: 404
+  Normal   Killing    20s                kubelet, docker-desktop  Container my-nginx-health failed liveness probe, will be restarted
+```
+
+Now when you go and fetch `pods` and `exec` into it, you should see that `index.html` for example is now back (even after you removed it or renamed it). This is because the `pod` was removed and the new instance was started. That new instance has no relation with that file change we did, so it only has a fresh new state.
+
 ### Deletion of pod
 
 Deletion of `pod` has an interesting side-effect that can be confusing first time. WHen you delete the `pod` using the command bellow:
