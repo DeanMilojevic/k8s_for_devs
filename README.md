@@ -96,10 +96,6 @@ Personally, if I need this I prefer tools like Lens as they do offer the same fu
 
 ![Lens for k8s](./resources/lens.png)
 
-## Deployments
-
-## Services
-
 ## Pods
 
 `Pods` are the smallest deployable units of computing that can be created and managed in Kubernetes. In short, they are the fundamental layer of the k8s that we can manage/deploy. They are used to run one or more containers, that is they act as environment for the container to run in. Even if it is possible to have multiple `containers` per `pod`, this is not something that is encouraged. The recommended mantra for this "one process per container and one container per pod", or at least trying to make a "mantra" :)
@@ -114,11 +110,57 @@ The networking for pods works as following:
 
 1. Each pod has a unique IP address that gets assigned to it. This is called `Cluster IP` address.
 2. The `containers` within the `pod` *share* the same IP address (of the pod), but they **have** the different ports. No 2 `containers` can have the same `port` and be in the same `pod`. Also, `containers` can span multiple `pods`. In case you need to have 2 or more `containers` in the `pod` (on internet found it referred to as *sidecar*, but never experienced a need for this), then you must ensure the `ports` are different for **each** container. The communication in the container is done over the same loopback network interface (localhost), so that makes it simple.
+3. Ports can be reused in separate `pod containers`. That means that if `container in pod A` has a port of `80` assigned, the `container in pod B` can also have the port `80` assigned.
 
 <p align=center>
   <img alt="pod ip" src="./resources/pod_ip.svg" />
 </p>
 
+### Port forwarding
+
+When the `pod` starts, it gets an `Cluster IP` address. This is something that is internal for the `cluster` itself. In other words, we can't access it directly as the `containers` and `pods` are only accessible within the cluster. To make this happen, we need to do a *port forwarding*. This is similar to the `docker` and `docker-compose`. The command for *port forwarding*:
+
+```bash
+kubectl port-forward [pod-name] [external-port]:[internal-port]
+
+# example
+
+kubectl port-forward myapp 5000:5000
+
+# now you can, for example, navigate to the localhost:5000 and see the application (example is for http endpoint of .net core app)
+```
+
+### Deletion of pod
+
+Deletion of `pod` has an interesting side-effect that can be confusing first time. WHen you delete the `pod` using the command bellow:
+
+```bash
+kubectl delete pod [pod-name]
+
+# example
+
+kubectl delete pod myapp
+```
+
+Afterwards, you can try to get the all `pods` within the cluster:
+
+```bash
+kubectl get pods
+```
+
+you will again see your `pod`. If you look carefully and compare before/after situation, you will notice that there is a difference. `Pod` has a new **id**. This is expected behavior of the k8s, as it tries to keep the desired state. The `master node` got notified of deletion of the `pod`, checked the `deployment` (discussed in upcoming chapter) and saw that `pod` should have `number of replicas` running and the started a new instance. So the `pod` was deleted, it is just that new instance of it was started automatically.
+
+To fully remove the you need to remove the `deployment` that is associated with this `pod` (or that manages the `pod`). For this you can check the [Deleting the deployment](### Deleting the deployment).
+
+## Deployments
+
+### Deleting the deployment
+
+```bash
+kubectl delete deployment [deployment-name]
+```
+
+## Services
 
 ## Storage
 
@@ -137,7 +179,10 @@ The networking for pods works as following:
 |``` kubectl create [resource] ```| Create a resource |
 |``` kubectl apply [resource] ```| Create or modify a resource |
 |``` kubectl get all ```| Gets (well, everything) `pods`, `deployments`, `services`, etc.  |
-|``` kubectl port-forward [pod] [ports] ```| Allows the external access to the forwarded port |
+|``` kubectl port-forward [pod-name] [ports] ```| Allows the external access to the forwarded port |
+|``` kubectl delete ([-f FILENAME] | [-k DIRECTORY] | TYPE [(NAME | -l label | --all)]) [options] ``` | Deleting a resource within the cluster |
+|``` kubectl delete pod [pod-name] ```| Delete a pod with given name |
+
 
 ## Tools
 
