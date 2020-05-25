@@ -116,6 +116,47 @@ The networking for pods works as following:
   <img alt="pod ip" src="./resources/pod_ip.svg" />
 </p>
 
+### Creating a pod
+
+The simplest way to create a pod is using the following command:
+
+```bash
+kubectl run [pod-name] --image=[image-name]
+
+# example
+kubectl run my-nginx --image=nginx:alpine
+```
+
+This is something that will be deprecated in the future (you can see by the output of the command):
+
+```bash
+kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead. deployment.apps/my-nginx created
+```
+
+Now when we execute the command:
+
+```bash
+kubectl get all
+```
+
+the result should look like following (on clean cluster):
+
+```bash
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/my-nginx-576bb7cb54-p45zj   1/1     Running   0          96s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   16h
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   1/1     1            1           96s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-576bb7cb54   1         1         1       96s
+```
+
+Except `ClusterIP`, everything was created with the command we just run. Tho it is much more then expected as we see couple more extra resources associated with the `pod`. This topics will be discussed in the [Deployments](#deployments) section of this document. Tho the pod is now running, we can't get to it, so lets see how we can manage this in the following chapter.
+
 ### Port forwarding
 
 When the `pod` starts, it gets an `Cluster IP` address. This is something that is internal for the `cluster` itself. In other words, we can't access it directly as the `containers` and `pods` are only accessible within the cluster. To make this happen, we need to do a *port forwarding*. This is similar to the `docker` and `docker-compose`. The command for *port forwarding*:
@@ -125,9 +166,70 @@ kubectl port-forward [pod-name] [external-port]:[internal-port]
 
 # example
 
-kubectl port-forward myapp 5000:5000
+kubectl port-forward my-nginx-576bb7cb54-p45zj 8080:80
+```
 
-# now you can, for example, navigate to the localhost:5000 and see the application (example is for http endpoint of .net core app)
+After running the command above (with your `pod` name), you should see the following:
+
+```bash
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+```
+
+Now lets try curl our endpoint and see what will the output be:
+
+```bash
+http GET localhost:8080
+# I am using a CLI tool httpie (https://httpie.org/) that is a bit nicer, imo, when working with the examples
+```
+
+with the output of:
+
+```html
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Connection: keep-alive
+Content-Length: 612
+Content-Type: text/html
+Date: Mon, 25 May 2020 07:07:32 GMT
+ETag: "5e95ccbe-264"
+Last-Modified: Tue, 14 Apr 2020 14:46:22 GMT
+Server: nginx/1.17.10
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
+
+Back in the terminal where we started *port forward* we should also see some information:
+
+```bash
+kubectl port-forward my-nginx-576bb7cb54-p45zj 8080:80
+Forwarding from 127.0.0.1:8080 -> 80
+Forwarding from [::1]:8080 -> 80
+Handling connection for 8080
 ```
 
 ### Deletion of pod
@@ -139,7 +241,7 @@ kubectl delete pod [pod-name]
 
 # example
 
-kubectl delete pod myapp
+kubectl delete pod my-nginx
 ```
 
 Afterwards, you can try to get the all `pods` within the cluster:
@@ -153,6 +255,8 @@ you will again see your `pod`. If you look carefully and compare before/after si
 To fully remove the you need to remove the `deployment` that is associated with this `pod` (or that manages the `pod`). For this you can check the [Deleting the deployment](###deleting-the-deployment).
 
 ## Deployments
+
+### ReplicaSet
 
 ### Deleting the deployment
 
