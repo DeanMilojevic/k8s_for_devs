@@ -262,6 +262,22 @@ To fully remove the you need to remove the `deployment` that is associated with 
 
 ```bash
 kubectl delete deployment [deployment-name]
+
+# example
+kubectl delete deployment my-nginx
+```
+
+For this command, you should see something like this:
+
+```bash
+ deployment.apps "my-nginx" deleted
+ ```
+
+ Now when we try to run the following command `kubectl get all`, there should not be any resources associated with the deployment:
+
+```bash
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   16h
 ```
 
 ## Services
