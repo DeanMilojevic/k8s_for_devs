@@ -839,7 +839,25 @@ spec:
     targetPort: 80
 ```
 
-This time we will be just hitting the port `80` and the result should be the same.
+This time we will be just hitting the port `80` and the result should be the same. This is because the cluster creates a loopback in network for `localhost`. You can see this by running `kubectl get all` and check the `EXTERNAL-IP` column.
+
+The ExternalName `service` also goes quite similar to the previous examples. Tho testing can be a bit tricky :)
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ext-service
+  labels:
+    app: my-nginx
+spec:
+  type: ExternalName
+  externalName: api.external-service.com
+  selector:
+    app: my-nginx
+```
+
+Now from the `pod` in the cluster you can call the configured endpoint (for example `curl ext-service`) and it should proxy the call to the proper endpoint. I tried this using some external APIs for testing, but because of HTTPS I would end up in `301` status code. Will try to update this with maybe an example within the cluster at one point :)
 
 ## Storage
 
