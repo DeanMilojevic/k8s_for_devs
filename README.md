@@ -695,6 +695,12 @@ LoadBalancer is somewhat self explanatory on what it does. It allows us to route
   <img alt="loadbalancer" src="./resources/loadbalancer.svg" />
 </p>
 
+ExternalName service represents a alias for some external service. This way if the endpoint/ip of that external dependency keeps changing (or is something that is different between environments), we can define an alias that is known within our `cluster`. That is, it is known to everything that depends on that particular external service. That way, if the "implementation" detail (or endpoint/ip in this case) changes, we don't need to do anything special with dependent services. The ExternalName service will proxy the request.
+
+<p align=center>
+  <img alt="external name" src="./resources/externalname.svg" />
+</p>
+
 ## Storage
 
 ## ConfigMaps
