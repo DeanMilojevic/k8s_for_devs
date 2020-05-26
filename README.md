@@ -677,7 +677,7 @@ There are 4 different types of the `services`:
 3. LoadBalancer: Expose an external IP address to perform load balancing for the service
 4. ExternalName: Mapping of the service to the DNS name
 
-ClusterIP exposes the the service IP internally for the cluster. This is for the internal communication within the cluster. This allows the `pod` to `pod` communication within the `cluster` (or to be precise, `pod->service->pod`).
+ClusterIP exposes the the service IP internally for the `cluster`. This is for the internal communication within the cluster. This allows the `pod` to `pod` communication within the `cluster` (or to be precise, `pod->service->pod`).
 
 <p align=center>
   <img alt="cluster ip" src="./resources/clusterip.svg" />
@@ -689,7 +689,11 @@ NodePort exposes a `service` at `worker nodes ip` address at static port. Then t
   <img alt="nodeport" src="./resources/nodeport.svg" />
 </p>
 
-LoadBalancer is somewhat self explanatory on what it does. It allows us to route the traffic between the different nodes, based on the traffic.
+LoadBalancer is somewhat self explanatory on what it does. It allows us to route the traffic between the different nodes, based on the traffic. Behind a scene NodePort and ClusterIP will be created to enable the load balancing across the nodes.
+
+<p align=center>
+  <img alt="loadbalancer" src="./resources/loadbalancer.svg" />
+</p>
 
 ## Storage
 
