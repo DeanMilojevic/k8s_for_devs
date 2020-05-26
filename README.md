@@ -653,6 +653,44 @@ service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   16h
 
 ## Services
 
+A `service` is an entry point to access one or more `pods`. Now on the point of why are they needed. `Pods` have "expiration" date so to say, we can't assume that they won't restart at any point or something goes wrong with them so they need to be restarted. Well, as we pointed out earlier `pod` has the `cluster ip` associated with it. If that `ip` changes, we can't access the pod anymore. Or when we scale the number of `pods`, they each get a new `ip` (`cluster ip` is associated with the pod on `scheduling` so no way to know it upfront) and how we would know about that. That is where the `services` come into the play, they ensure that networking from external world works. That is, they abstract a `cluster ip` from the `pod` and provide stable `ip` (`kube-proxy` creates a virtual `ip` for the `service`) towards external clients of the `pod`.
+
+This is done by associating `pods` and `service` using `labels` when defining a template. The additional thing is that `service` will do load balancing the incoming traffic amongst the `pods` it is managing. So every time when `pod` comes alive it will be "discovered" by the associated `service` and be added as part of the pack.
+
+<p align=center>
+  <img alt="service" src="./resources/service.svg" />
+</p>
+
+```yml
+metadata:
+  name: my-app
+  labels:
+    app: my-app
+```
+
+### Service types
+
+There are 4 different types of the `services`:
+
+1. ClusterIP (default): Expose the service on internal `cluster ip`
+2. NodePort: Expose the service on each Node's IP with a static port
+3. LoadBalancer: Expose an external IP address to perform load balancing for the service
+4. ExternalName: Mapping of the service to the DNS name
+
+ClusterIP exposes the the service IP internally for the cluster. This is for the internal communication within the cluster. This allows the `pod` to `pod` communication within the `cluster` (or to be precise, `pod->service->pod`).
+
+<p align=center>
+  <img alt="cluster ip" src="./resources/clusterip.svg" />
+</p>
+
+NodePort exposes a `service` at `worker nodes ip` address at static port. Then the node proxies the allocated port. This can be useful for debugging purposes.
+
+<p align=center>
+  <img alt="nodeport" src="./resources/nodeport.svg" />
+</p>
+
+LoadBalancer is somewhat self explanatory on what it does. It allows us to route the traffic between the different nodes, based on the traffic.
+
 ## Storage
 
 ## ConfigMaps
