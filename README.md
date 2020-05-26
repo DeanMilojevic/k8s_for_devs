@@ -701,6 +701,146 @@ ExternalName service represents a alias for some external service. This way if t
   <img alt="external name" src="./resources/externalname.svg" />
 </p>
 
+### Declarative to define a Service
+
+To define a service in `YAML` this is what is needed:
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  selector:
+    app: my-nginx
+  ports:
+  - port: 8080
+    targetPort: 80
+```
+
+This is a ClusterIP (no type specified, so by default) that will be associated with the `pods` from previous examples by using the `selector: app: my-nginx`. To make this work, we first run the `kubectl apply -f src/nginx.deployment.yaml`. After we run the:
+
+```bash
+kubectl apply -f src/nginx.service.yaml`
+```
+
+Now lets fetch all the resources associated with label `app: my-nginx`:
+
+```bash
+k get all -lapp=my-nginx
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/my-nginx-5d98b969bc-n76hm   1/1     Running   0          82s
+
+NAME               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/my-nginx   ClusterIP   10.108.228.80   <none>        8080/TCP   14s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   1/1     1            1           82s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5d98b969bc   1         1         1       82s
+```
+
+We can see that service was created and that it is properly "tagged" with the label. Now we can experiment with calling our `pods` through the IP that we see with our `service`. We can run `kubectl run` command and create a dummy `pod` or `port-forward` the traffic to our service. Also now, when communicating with our pods within the cluster, we can use the assigned DNS name of the `service` do something like `curl http://my-nginx:8080`.
+
+Now lets try creating a `service` NodePort:
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  type: NodePort
+  selector:
+    app: my-nginx
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 31000
+```
+
+We run the same commands to apply the changes to the cluster and when we do `kubectl get all -lapp=my-nginx` we should se something like this:
+
+```bash
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/my-nginx-5d98b969bc-xnnsw   1/1     Running   0          46s
+
+NAME               TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/my-nginx   NodePort   10.107.41.184   <none>        80:31000/TCP   4s
+
+NAME                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/my-nginx   1/1     1            1           46s
+
+NAME                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/my-nginx-5d98b969bc   1         1         1       46s
+```
+
+Now we can do locally (not within the cluster) `http GET http://localhost:31000` amd the output should be:
+
+```html
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Connection: keep-alive
+Content-Length: 612
+Content-Type: text/html
+Date: Tue, 26 May 2020 17:01:13 GMT
+ETag: "5e95ccbe-264"
+Last-Modified: Tue, 14 Apr 2020 14:46:22 GMT
+Server: nginx/1.17.10
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
+
+This is fun, right. Now the same story goes if we create the LoadBalancer type of `service`:
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: my-nginx
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+```
+
+This time we will be just hitting the port `80` and the result should be the same.
+
 ## Storage
 
 ## ConfigMaps
