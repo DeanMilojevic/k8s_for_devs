@@ -356,8 +356,8 @@ There is a lot of information here. Also we can see all the information for our 
 
 Now let us touch on the subject that can help k8s to help you when something goes wrong. That is using the `probs` to determine the state/health of the `pod container`. There are 2 types of the `probes` k8s are using to determine what is happening (or what it should to with a particular `container`):
 
-1. Liveness prob
-2. Readiness prob
+1. **Liveness prob**
+2. **Readiness prob**
 
 There is a subtle difference between the two. Liveness prob says is `pod` alive. Readiness prob checks is the requests can be forwarded to the `pod`. `Probs` are something that will k8s run behind a scene for you, sort of diagnostic, periodically. So it is not something that we need to worry about, except when it starts failing :)
 
@@ -371,9 +371,9 @@ There are different types of checks we can perform in combination when defining 
 
 The "result" of the check can be:
 
-1. Success
-2. Failure
-3. Unknown
+1. **Success**
+2. **Failure**
+3. **Unknown**
 
 Now, the following example shows how to define the `liveness and readiness prob` in declarative way (again, this only means using `YAML`):
 
@@ -613,10 +613,10 @@ For more information about `units` used here:
 
 What k8s offer out of the box are several ways of doing deployments:
 
-1. Rolling updates (default)
-2. Rollback
-3. Blue-green (or A/B) deployment
-4. Canary deployment
+1. **Rolling updates (default)**
+2. **Rollback**
+3. **Blue-green (or A/B) deployment**
+4. **Canary deployment**
 
 For more information on this subject:
 [https://kubernetes.io/docs/concepts/workloads/controllers/deployment/](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
@@ -857,18 +857,22 @@ spec:
     app: my-nginx
 ```
 
-Now from the `pod` in the cluster you can call the configured endpoint (for example `curl ext-service`) and it should proxy the call to the proper endpoint. I tried this using some external APIs for testing, but because of HTTPS I would end up in `301` status code. Will try to update this with maybe an example within the cluster at one point :)
+Now from the `pod` in the cluster you can call the configured endpoint (for example `curl ext-service`) and it should proxy the call to the proper endpoint. I tried this using some external APIs for testing, but because of HTTPS I would end up in `301` status code. Will try to update this with maybe an example within the cluster at one point :). This usually requires some ingress rules and that can become cumbersome really fast :|.
 
 ## Storage
 
 To store some data/state/files on the file system for `pods/containers`, the k8s utilize the `volumes` for this. This feature is useful as `pods` have uncertain life expectancy, so if something is important you should no be keeping it on file system of the pod. `Pod` can have multiple `volumes` attached to it. `Container` within the `pod` usee `mountPath` to access the `volume`.
 
-Within k8s there is support for:
+A `volume` represents a reference to the storage location. They must have unique name and they can/don't need to be attached to the lifetime of the `pod`. Volume mount references a defined `volume` and defines a `mountPath` for accessing it. Types of the `volumes`:
 
-1. Volumes
-2. PersistentVolumes
-3. PersistentVolumeClaims
-4. StorageClasses
+1. **emptyDir**: Shares the lifetime of the `pod`. Used to store transient data.
+2. **hostPath**: Defines a mount for the `pod` into the `nodes` file system.
+3. **nfs**: Network File System that `pod` can use to access the drive on the network.
+4. **configMap**: Allows storing of key-value pairs. Used for configurations that can be accessed from within the `container`.
+5. **secret**: Same as configMap but intended to store sensitive data (hence the name).
+6. **persistentVolumeClaim**: Represents the abstraction of the persistent storage that `pod` can use without knowing exact details of the storage.
+7. **cloud**: cluster-wide storage outside of the network.
+8. for more types and information: [https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes](https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes)
 
 <p align=center>
   <img alt="volumes" src="./resources/volumes.svg" />
