@@ -861,6 +861,19 @@ Now from the `pod` in the cluster you can call the configured endpoint (for exam
 
 ## Storage
 
+To store some data/state/files on the file system for `pods/containers`, the k8s utilize the `volumes` for this. This feature is useful as `pods` have uncertain life expectancy, so if something is important you should no be keeping it on file system of the pod. `Pod` can have multiple `volumes` attached to it. `Container` within the `pod` usee `mountPath` to access the `volume`.
+
+Within k8s there is support for:
+
+1. Volumes
+2. PersistentVolumes
+3. PersistentVolumeClaims
+4. StorageClasses
+
+<p align=center>
+  <img alt="volumes" src="./resources/volumes.svg" />
+</p>
+
 ## ConfigMaps
 
 ## Secretes
