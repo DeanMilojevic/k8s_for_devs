@@ -921,7 +921,48 @@ Volumes:
     SizeLimit:  <unset>
 ```
 
+For more information about `volumes`: [https://kubernetes.io/docs/concepts/storage/volumes/](https://kubernetes.io/docs/concepts/storage/volumes/). This is an extensive topic that is different between the use-cases. This goes for `PersistentVolume` and other types of storage, not just the ones I showed above. 
+
 ## ConfigMaps
+
+ConfigMaps provide a way to store configuration and use it within the `containers`. It is a way to inject the configuration into our `containers` using key-value pairs or a file. Tho using a file is also looked at as key-value pair (filename - file contents).
+
+ConfigMaps can be accessed using:
+
+1. Environment variables (key-value)
+2. ConfigMap volume (files)
+
+Defining a ConfigMap using a manifest:
+
+```yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-nginx
+  labels:
+    app: my-nginx
+data:
+  test: "value"
+```
+
+Creating the ConfigMap using a values from the file:
+
+```bash
+kubectl create configmap [config-map-name] --from-file=[file-path]
+
+# output in the ConfigMap => key becomes a filename
+# ...
+# data:
+#   myfile.config: |-
+#     config1=value
+#     config2=false
+```
+
+Using a `.env` file (and `--from-env-file` flag with the command) will create a similar output as with using the `manifest`. It is also possible to create ConfigMap directly from the command, using literals:
+
+```bash
+kubectl create configmap [config-map-name] --from-literal=config1=false --from-literal=config2=value
+```
 
 ## Secretes
 
