@@ -878,6 +878,49 @@ A `volume` represents a reference to the storage location. They must have unique
   <img alt="volumes" src="./resources/volumes.svg" />
 </p>
 
+An example on how to declare the `emptyDir volume`:
+
+```yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx
+  labels:
+    name: my-nginx
+spec:
+  volumes:
+    - name: my-volume
+      emptyDir: {}
+  containers:
+  - name: my-nginx
+    image: nginx:alpine
+    volumeMounts:
+      - mountPath: /usr/share/nginx/html
+        name: my-volume
+        readOnly: true
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+```
+
+Now we can describe our `pod` and we should see the information about the volume in there:
+
+```yml
+...
+Mounts:
+      /usr/share/nginx/html from my-volume (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-kxzww (ro)
+...
+Volumes:
+  my-volume:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:  <unset>
+```
+
 ## ConfigMaps
 
 ## Secretes
