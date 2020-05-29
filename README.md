@@ -1061,7 +1061,37 @@ base64 -d
 MTIzNCE=
 1234!%
 
+# you can also do it like this, if the string in in the clipboard :)
+# pbpaste | base64 -d
+# 1234!%
+
 # and here it is, our password
+```
+
+Now let us see how we can use this secret from within the `pod`:
+
+```bash
+# first we create a secret
+kubectl create secret generic my-nginx --from-literal=password='1234!'
+secret/my-nginx created
+
+# now let us create a pod that uses the secret
+kubectl apply -f src/nginx.secret.yaml
+deployment.apps/my-nginx created
+
+# get the pods
+kubectl get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+my-nginx-78f7944647-j5fxt   1/1     Running   0          5s
+
+# now we exec into the pod
+kubectl exec my-nginx-78f7944647-j5fxt -it sh
+
+# run the command to echo out the env variable
+echo $MYPASSWORD
+1234!
+
+# and that is it
 ```
 
 ## CronJobs
