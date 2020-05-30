@@ -1094,8 +1094,6 @@ echo $MYPASSWORD
 # and that is it
 ```
 
-## CronJobs
-
 ## Tools
 
 [Lens](https://k8slens.dev/)
