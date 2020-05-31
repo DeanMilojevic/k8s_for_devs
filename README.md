@@ -3,7 +3,7 @@
   <img alt="k8s" src="./resources/k8s.svg" />
 </p>
 
-# K8s for Developers
+#
 
 [Kubernetes](https://kubernetes.io/) is an open-source system for automating deployment, scaling, and management of containerized applications.
 
