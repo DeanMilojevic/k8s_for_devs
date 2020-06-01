@@ -14,7 +14,7 @@ A `volume` represents a reference to the storage location. They must have unique
 8. for more types and information: [https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes](https://kubernetes.io/docs/concepts/storage/volumes/#types-of-volumes)
 
 <p align=center>
-  <img alt="volumes" src="./resources/volumes.svg" />
+  <img alt="volumes" src="../resources/volumes.svg" />
 </p>
 
 An example on how to declare the `emptyDir volume`:

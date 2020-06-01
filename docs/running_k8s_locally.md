@@ -8,7 +8,7 @@ There are different ways of running the k8s locally and to my knowledge most pop
 There are some other, but haven't tried them yet so not gonna touch them at this point. Currently, I am using `docker desktop` for all my development needs, including k8s. It is quite easy to enable the k8s locally:
 
 <p align=center>
-  <img alt="docker desktop" src="./resources/k8s_locally.png" />
+  <img alt="docker desktop" src="../resources/k8s_locally.png" />
 </p>
 
 In case of the problems enabling this (process is quite similar for Windows), I suggest StackOverflow :)
@@ -18,4 +18,4 @@ To view something using a GUI, there is a Web UI that can be configured for k8s.
 
 Personally, if I need this I prefer tools like Lens as they do offer the same functionality without a hustle of needing to install the Web UI on the cluster and running the proxy and playing with all that.
 
-![Lens for k8s](./resources/lens.png)
+![Lens for k8s](../resources/lens.png)

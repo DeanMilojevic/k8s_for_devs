@@ -5,7 +5,7 @@ Now that we are familiar with `pods`, let us move towards more real-world scenar
 `Deployment` is a declarative way to managed the `pods` using something called `ReplicaSet`. In short, they are wrapping the `ReplicaSet` and provide an easier way to manage the `pods`. This two pieces ensure that `pods` stay and running based on the **desired state**. This is something that we don't need to think about, it will be taken behind a scenes for us by the k8s. We declaratively describe what we want (how many pods, what happens in case of failure, etc.) and `deployment`, together with `ReplicaSet`, will try to keep that state.
 
 <p align=center>
-  <img alt="deployment" src="./resources/deployment.svg" />
+  <img alt="deployment" src="../resources/deployment.svg" />
 </p>
 
 `Deployments` manage the following:

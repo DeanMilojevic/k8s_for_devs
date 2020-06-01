@@ -5,7 +5,7 @@
 Defining `replicas` when deploying the `pod` will indicate on how many instances/copies of the pod/container (this can be used interchangeably if we follow the mantra) we will be running within the `node`. This is the `horizontal scaling` that will be taken care automatically for you by k8s. K8s will then load balance the incoming traffic across available pods and allow high availability of the application. In case that one of the pods is "unhealthy", k8s will automatically remove it and replace it with a new instance. This means that `pods` never recover from failure, they are replaced with a new instance.
 
 <p align=center>
-  <img alt="failing pod" src="./resources/failing_pod.svg" />
+  <img alt="failing pod" src="../resources/failing_pod.svg" />
 </p>
 
 The networking for pods works as following:
@@ -15,7 +15,7 @@ The networking for pods works as following:
 3. Ports can be reused in separate `pod containers`. That means that if `container in pod A` has a port of `80` assigned, the `container in pod B` can also have the port `80` assigned.
 
 <p align=center>
-  <img alt="pod ip" src="./resources/pod_ip.svg" />
+  <img alt="pod ip" src="../resources/pod_ip.svg" />
 </p>
 
 ## Creating a pod

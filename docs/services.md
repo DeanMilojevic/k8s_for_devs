@@ -5,7 +5,7 @@ A `service` is an entry point to access one or more `pods`. Now on the point of 
 This is done by associating `pods` and `service` using `labels` when defining a template. The additional thing is that `service` will do load balancing the incoming traffic amongst the `pods` it is managing. So every time when `pod` comes alive it will be "discovered" by the associated `service` and be added as part of the pack.
 
 <p align=center>
-  <img alt="service" src="./resources/service.svg" />
+  <img alt="service" src="../resources/service.svg" />
 </p>
 
 ```yml
@@ -27,25 +27,25 @@ There are 4 different types of the `services`:
 ClusterIP exposes the the service IP internally for the `cluster`. This is for the internal communication within the cluster. This allows the `pod` to `pod` communication within the `cluster` (or to be precise, `pod->service->pod`).
 
 <p align=center>
-  <img alt="cluster ip" src="./resources/clusterip.svg" />
+  <img alt="cluster ip" src="../resources/clusterip.svg" />
 </p>
 
 NodePort exposes a `service` at `worker nodes ip` address at static port. Then the node proxies the allocated port. This can be useful for debugging purposes.
 
 <p align=center>
-  <img alt="nodeport" src="./resources/nodeport.svg" />
+  <img alt="nodeport" src="../resources/nodeport.svg" />
 </p>
 
 LoadBalancer is somewhat self explanatory on what it does. It allows us to route the traffic between the different nodes, based on the traffic. Behind a scene NodePort and ClusterIP will be created to enable the load balancing across the nodes.
 
 <p align=center>
-  <img alt="loadbalancer" src="./resources/loadbalancer.svg" />
+  <img alt="loadbalancer" src="../resources/loadbalancer.svg" />
 </p>
 
 ExternalName service represents a alias for some external service. This way if the endpoint/ip of that external dependency keeps changing (or is something that is different between environments), we can define an alias that is known within our `cluster`. That is, it is known to everything that depends on that particular external service. That way, if the "implementation" detail (or endpoint/ip in this case) changes, we don't need to do anything special with dependent services. The ExternalName service will proxy the request.
 
 <p align=center>
-  <img alt="external name" src="./resources/externalname.svg" />
+  <img alt="external name" src="../resources/externalname.svg" />
 </p>
 
 ### Declarative way to define a Service

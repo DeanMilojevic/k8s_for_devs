@@ -1,6 +1,6 @@
 
 <p align=center>
-  <img alt="k8s" src="./resources/k8s.svg" />
+  <img alt="k8s" src="../resources/k8s.svg" />
 </p>
 
 #
@@ -22,13 +22,13 @@ This is just some of the benefits system like k8s offers. From developer point o
 Lets reflect on the benefits that we have using tools like `docker` and `containers` during development:
 
 <p align=center>
-  <img alt="benefits of containers" src="./resources/benefits_of_containers.svg" />
+  <img alt="benefits of containers" src="../resources/benefits_of_containers.svg" />
 </p>
 
 With this out of the way, lets see some really useful benefits of the k8s for developers:
 
 <p align=center>
-  <img alt="benefits of k8s" src="./resources/benefits_of_k8s.svg" />
+  <img alt="benefits of k8s" src="../resources/benefits_of_k8s.svg" />
 </p>
 
 Some of the reasons you would like to run k8s during development lifecycle:
